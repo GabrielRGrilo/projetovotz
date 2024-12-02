@@ -15,8 +15,9 @@ export function Login() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        console.log("Verificando usuário:", user);
         if (user && user._id) {
-            console.log("Usuário autenticado, redirecionando...");
+            console.log("Usuário autenticado, redirecionando para /home...");
             navigate('/home');
         }
     }, [user, navigate]);
