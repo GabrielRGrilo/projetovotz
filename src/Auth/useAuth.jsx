@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post("/login", credentials, { withCredentials: true });
   
-      console.log("Login bem-sucedido:", response.data);
+      console.log("Login bem-sucedido useAuth.jsx:", response.data);
       return response.data; // Retorna os dados da resposta
     } catch (error) {
       console.error("Erro ao logar:", error.response?.data?.message || error.message);
