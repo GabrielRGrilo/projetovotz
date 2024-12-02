@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 const isAuthenticated = () => {
   // Verifique se o token está salvo nos cookies
   const token = Cookies.get("token"); // Use Cookies.get() para pegar o token
-  console.log(token, 'Token encontrado nos cookies:');
+  // console.log(token, 'Token encontrado nos cookies:');
   return !!token; // Retorna true se o token existir, indicando que o usuário está autenticado
 };
 
