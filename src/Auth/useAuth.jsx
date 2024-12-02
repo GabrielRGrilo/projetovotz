@@ -10,24 +10,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await fetch(`https://pmv-ads-2023-2-e4-proj-dad-t2-votz.onrender.com/api/login`, {
-        method: "POST",
-        credentials: "include", // Inclui cookies na requisição
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+      const response = await api.post("/login", credentials);
   
-      if (!response.ok) {
-        throw new Error("Erro ao fazer login.");
-      }
-  
-      const data = await response.json();
-      console.log("Login bem-sucedido:", data);
-      return data;
+      console.log("Login bem-sucedido:", response.data);
+      return response.data; // Retorna os dados da resposta
     } catch (error) {
-      console.error("Erro ao logar:", error.message);
+      console.error("Erro ao logar:", error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || "Erro ao fazer login.");
     }
   };
   
