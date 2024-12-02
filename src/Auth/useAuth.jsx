@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await api.post("/login", credentials);
+      const response = await api.post("/login", credentials, { withCredentials: true });
   
       console.log("Login bem-sucedido:", response.data);
       return response.data; // Retorna os dados da resposta
