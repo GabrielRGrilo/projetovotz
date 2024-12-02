@@ -20,8 +20,9 @@ const Home = () => {
   const navigate = useNavigate();
 
   const admin = useAuth().user;
+  console.log("HOME/index.js admin", admin);
   sessionStorage.setItem("adminId", admin._id);
-  console.log(admin);
+  
 
   const createNewElection = (id) => {
     navigate(`/base`); // Redirects to /elections/{id}
