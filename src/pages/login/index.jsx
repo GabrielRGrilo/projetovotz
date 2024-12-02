@@ -24,7 +24,7 @@ export function Login() {
             // await login(credentials);
             // console.log("Login bem-sucedido. Redirecionando para /home...");
 
-            document.cookie = `token=${response.token}; path=/; secure`;
+            // document.cookie = `token=${response.token}; path=/; secure`;
             console.log('Token set in cookies:', document.cookie);
 
             console.log("Navigating to /home...");
