@@ -35,7 +35,7 @@ const Home = () => {
   const getElectionsByAdminId = async () => {
     try {
       const response = await api.get(
-        `/elections/admin/${admin._id}`
+        `/elections/admin/${adminId}`
       );
       // console.log(">>> Home/index.js response: ", response);
       setElections(response.data);
