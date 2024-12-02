@@ -19,8 +19,15 @@ export function Login() {
         setLoading(true);
         setError(null);
         try {
-            await login(credentials);
-            console.log("Login bem-sucedido. Redirecionando para /home...");
+            const response = await login(credentials);
+            console.log("Login bem-sucedido:", response);
+            // await login(credentials);
+            // console.log("Login bem-sucedido. Redirecionando para /home...");
+
+            document.cookie = `token=${response.token}; path=/; secure`;
+            console.log('Token set in cookies:', document.cookie);
+
+            console.log("Navigating to /home...");
             navigate('/home'); // Redireciona diretamente após login bem-sucedido
         } catch (err) {
             console.error('Falha no login:', err);
