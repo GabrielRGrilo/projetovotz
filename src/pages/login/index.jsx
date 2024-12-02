@@ -20,7 +20,7 @@ export function Login() {
         setError(null);
         try {
             const response = await login(credentials);
-            console.log("Login bem-sucedido:", response);
+            console.log("Login bem-sucedido index.jsx:", response);
             // await login(credentials);
             // console.log("Login bem-sucedido. Redirecionando para /home...");
 
