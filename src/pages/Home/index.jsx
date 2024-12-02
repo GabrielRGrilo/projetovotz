@@ -19,9 +19,11 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  console.log("HOME/index.js useAuth().user", useAuth().user);
+  const user = useAuth()
+  console.log("HOME/index.js user", user);
+  // console.log("HOME/index.js useAuth().user", useAuth().user);
   const admin = useAuth().user;
-  console.log("HOME/index.js admin", admin);
+  // console.log("HOME/index.js admin", admin);
   sessionStorage.setItem("adminId", admin._id);
   
 
