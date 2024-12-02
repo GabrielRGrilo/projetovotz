@@ -14,6 +14,8 @@ export const AuthProvider = ({ children }) => {
   
       console.log("Login bem-sucedido useAuth.jsx:", response.data.user);
       sessionStorage.setItem("adminId", response.data.user._id);
+      console.log("Login bem-sucedido sessionStorage.getItem('adminId'):", sessionStorage.getItem("adminId"));
+
       return response.data.user; // Retorna os dados da resposta
     } catch (error) {
       console.error("Erro ao logar:", error.response?.data?.message || error.message);
