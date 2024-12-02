@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   
       console.log("Login bem-sucedido useAuth.jsx:", response.data.user);
       sessionStorage.setItem("adminId", response.data.user._id);
-      const user sessionStorage.getItem("adminId");
+      const user = sessionStorage.getItem("adminId");
       console.log("Login bem-sucedido user: ", user);
 
       return response.data.user; // Retorna os dados da resposta
