@@ -1,0 +1,7 @@
+# The following redirect is intended for use with most SPAs that handle
+# routing internally.
+[[redirects]]
+  from = "/api/*"
+  to = "https://pmv-ads-2023-2-e4-proj-dad-t2-votz-1.onrender.com/api/:splat"
+  status = 200
+
