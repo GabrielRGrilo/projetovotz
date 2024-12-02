@@ -14,20 +14,14 @@ export function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        console.log("Verificando usuário:", user);
-        if (user && user._id) {
-            console.log("Usuário autenticado, redirecionando para /home...");
-            navigate('/home');
-        }
-    }, [user, navigate]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
         try {
             await login(credentials);
+            console.log("Login bem-sucedido. Redirecionando para /home...");
+            navigate('/home'); // Redireciona diretamente após login bem-sucedido
         } catch (err) {
             console.error('Falha no login:', err);
             setError('Falha ao fazer login. Verifique suas credenciais.');
