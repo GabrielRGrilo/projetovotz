@@ -9,17 +9,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = async (credentials) => {
-    try {
-      const response = await api.post("/login", credentials, { withCredentials: true });
-  
-      console.log("Login bem-sucedido:", response.data);
-      setUser(response.data.user);
-      return response.data; // Retorna os dados da resposta
-    } catch (error) {
-      console.error("Erro ao logar:", error.response?.data?.message || error.message);
-      throw new Error(error.response?.data?.message || "Erro ao fazer login.");
-    }
-  };
+    const response = await api.post('/login', credentials);
+    setUser(response.data.user); // Atualiza o estado global
+    localStorage.setItem('authToken', response.data.token); // Armazena o token
+};
 
   const register = async (credentials) => {
     try {
