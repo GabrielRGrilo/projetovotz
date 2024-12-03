@@ -29,7 +29,7 @@ const Home = () => {
   
 
   const createNewElection = (id) => {
-    navigate(`/base`); // Redirects to /elections/{id}
+    navigate(`/base`); 
   };
 
   const getElectionsByAdminId = async () => {
