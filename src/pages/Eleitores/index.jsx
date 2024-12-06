@@ -60,6 +60,7 @@ const Eleitor = ({ setActiveTab }) => {
 
   // Upload the file to the server
   const uploadFile = async (file) => {
+    console.log(">>> Eleitores/index.js uploadFile file", file);
     const formData = new FormData();
     formData.append("file", file);
 
