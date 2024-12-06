@@ -21,6 +21,7 @@ import PropTypes from "prop-types";
 
 const Auditores = ({ setActiveTab }) => {
     const electionId = sessionStorage.getItem("electionId");
+  const adminId = sessionStorage.getItem("adminId");
     const [auditors, setAuditors] = useState([]);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -84,20 +85,27 @@ const Auditores = ({ setActiveTab }) => {
         setEditingAuditorId(null);
     };
 
-    const handlePublishVoting = async () => {
-        if (!electionId) {
-            alert("Por favor, selecione uma eleição para publicar.");
-            return;
-        }
+  const handlePublishVoting = async () => {
+    const formData = new FormData();
+    formData.append("electionId", electionId);
+    formData.append("adminId", adminId);
+    if (!electionId) {
+      alert("Por favor, selecione uma eleição para publicar.");
+      return;
+    }
 
-        try {
-            await api.put(`/elections/publish/${electionId}`);
-            setIsModalOpen(true);
-        } catch (error) {
-            console.error("Erro ao publicar a eleição:", error);
-            alert("Erro ao publicar a eleição: " + (error.response?.data?.message || error.message));
-        }
-    };
+    try {
+      await api.put(`/elections/publish/${electionId}`);
+      setIsModalOpen(true);
+      await api.post(`/voting`, formData);
+    } catch (error) {
+      console.error("Erro ao publicar a eleição:", error);
+      alert(
+        "Erro ao publicar a eleição: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
+  };
 
     const Modal = ({ message, onClose }) => (
         <Overlay>
