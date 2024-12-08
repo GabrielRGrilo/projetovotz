@@ -2,7 +2,7 @@ import { ThemeProvider } from "styled-components";
 import GlobalStyle from "./styles/global";
 import theme from "./styles/theme";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import ProtectedRoute from "./Auth/protectedRoutes";
+// import ProtectedRoute from "./Auth/protectedRoutes";
 
 import Base from "./pages/Base/index";
 import Parametros from "./pages/Parametros/index";
@@ -37,7 +37,7 @@ function App() {
         <Route path="/request-password-reset" element={<EsqueciSenha />} />
         <Route path="/reset-password/:resetToken" element={<ResetarSenha />} />
 
-        <Route element={<ProtectedRoute />}>
+{/*         <Route element={<ProtectedRoute />}> */}
           <Route path="/home" element={<Home />} />
           <Route path="/base" element={<Base />} />
           <Route path="/parametros" element={<Parametros />} />
@@ -55,7 +55,7 @@ function App() {
           <Route path="/voto-computado" element={<VotoComputado />} />
           <Route path="/eleicao/:id" element={<Eleicao />} />
           
-        </Route>
+{/*         </Route> */}
       </Routes>
     </ThemeProvider>
   );
