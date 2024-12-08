@@ -12,9 +12,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Resultado } from "../ResultadoEleicao";
 import CommonLayout from "@/components/CommonLayout"; // Importando o layout comum
 
-import deleteIcon from "../../assets/images/delete.png";
-import editIcon from "../../assets/images/edit.png";
-
 const DetailedElection = () => {
   const electionId = sessionStorage.getItem("electionId");
   const adminId = sessionStorage.getItem("adminId");
