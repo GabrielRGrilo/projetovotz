@@ -5,16 +5,6 @@ import editIcon from "../../assets/edit.png";
 import { Header } from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Modal,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Image,
-} from "react-native";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
 import { Modal } from "react-bootstrap"; // Importando o modal do react-bootstrap
@@ -55,7 +45,7 @@ const DetailedElection = () => {
             api.get(`/voters/elections/${electionId}`),
             api.get(`/candidates/elections/${electionId}`),
             api.get(`/auditors/elections/${electionId}`),
-            api.get(`/votings/elections/${id}`),
+            api.get(`/votings/elections/${electionId}`),
           ]);
         setLoading(false);
 
