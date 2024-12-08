@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
   height: 100vh;
-  width: 100vw;
-`;
+  width: 85vw;
+`
 
 export const Sidebar = styled.div`
   position: fixed;
@@ -19,12 +19,13 @@ export const Sidebar = styled.div`
   &:hover {
     transform: scaleX(1);
   }
-`;
+`
 
 export const Content = styled.div`
-  margin-left: 6vw;
+  
   padding-top: 5vh;
-  padding-left: 5rem;
+  padding-left: 15rem;
+  padding-right: 5rem;
   background-color: ${({ theme }) => theme.COLORS.LIGHT_100};
   color: ${({ theme }) => theme.COLORS.LIGHT_DARK};
   display: flex;
@@ -32,6 +33,66 @@ export const Content = styled.div`
   height: 100vh;
   overflow: scroll;
   transition: margin-left 0.3s ease;
+
+  .election-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.election-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: end;
+}
+
+.btn-publish {
+  background-color: #dbdbdb;
+  
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  width: 180px;
+  font-weight: 600;
+}
+
+.btn-publish:disabled {
+  background-color:#c7c7c7 ;
+  cursor: not-allowed;
+}
+
+.icon-action {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.icon-action:hover {
+  transform: scale(1.1);
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: red;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
 
   .voting-registration {
     display: flex;
@@ -41,6 +102,20 @@ export const Content = styled.div`
     text-align: right;
   }
 
+  .title-election {
+    font-size: 24px;
+    font-weight: bolder;
+  }
+
+  .title-result {
+    font-size: 24px;
+    font-weight: bolder;
+    margin-top: 30px;
+    margin-bottom: 12px;
+    display: flex;
+    
+  }
+
   .tab-content {
     overflow-y: auto;
     width: 80vw;
@@ -48,6 +123,16 @@ export const Content = styled.div`
     height: 48vh;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
+  }
+
+  .button-relatorio{
+  width: 150px;
+    background-color: #e2ecf6;
+    font-weight: 600;
+    margin-top: 12px;
+}
+}
+  
   }
 
   h2 {
@@ -141,7 +226,47 @@ export const Content = styled.div`
     justify-content: center;
     padding-left: 1vw;
   }
+`
+
+// Estilos do modal
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 `;
+
+export const ModalContent = styled.div`
+  position: relative;
+  background: white;
+  padding: 2rem; /* Usando rem para o padding */
+  width: 30%;
+  height: 20vh;
+  border-radius: 0.8rem; /* Usando rem para a borda */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: -1.5vh; 
+  left: 13vw; 
+  background: none;
+  border: none;
+  font-size: 4rem;
+  cursor: pointer;
+  color: #333;
+`;
+
 
 export const Tabs = styled.div`
   display: flex;
@@ -165,4 +290,4 @@ export const Tabs = styled.div`
     font-weight: bold;
     font-size: 1.8rem;
   }
-`;
+`

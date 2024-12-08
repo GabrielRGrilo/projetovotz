@@ -19,28 +19,19 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  // const user = useAuth();
-  const adminId = sessionStorage.getItem("adminId");
-  console.log("HOME/index.js adminId", adminId);
-  // console.log("HOME/index.js useAuth().user", useAuth().user);
   // const admin = useAuth().user;
-  // console.log("HOME/index.js admin", admin);
-  // sessionStorage.setItem("adminId", admin._id);
-  
+  const adminId = sessionStorage.getItem("adminId");
+  console.log("HOME/INEX.JS Login bem-sucedido adminId:", adminId);
 
   const createNewElection = (id) => {
-    navigate(`/base`); 
+    navigate(`/base`); // Redirects to /elections/{id}
   };
 
   const getElectionsByAdminId = async () => {
     try {
-      const response = await api.get(
-        `/elections/admin/${adminId}`
-      );
-      // console.log(">>> Home/index.js response: ", response);
+      const response = await api.get(`/elections/admin/${adminId}`);
       setElections(response.data);
       setLoading(false);
-      // console.log(">>> Home/index.js response.data: ", response.data);
     } catch (err) {
       setError(err.message);
       setLoading(false);
@@ -87,6 +78,7 @@ const Home = () => {
   };
 
   const handleElectionClick = (id) => {
+    sessionStorage.setItem("electionId", id);
     navigate(`/eleicao/${id}`);
   };
 
@@ -106,7 +98,7 @@ const Home = () => {
               <div className="newelection-text">Criar nova Eleição</div>
               <img
                 className="newelection-image"
-                src="../../assets/img-voltz.png"
+                src="../web/assets/img-voltz.png"
               />
             </div>
           </div>
@@ -119,7 +111,7 @@ const Home = () => {
             //   padding: "15px",
             // }}
           >
-            <h2>Minhas votações</h2>
+            <h2>Minhas Eleições</h2>
           </div>
           <div className="inputs">
             <select
@@ -159,7 +151,6 @@ const Home = () => {
                   key={election._id}
                   onClick={() => handleElectionClick(election._id)}
                   style={{
-                    // backgroundColor: index % 2 === 0 ? "#e6e6e6" : "#f2f2f2",
                     padding: "15px",
                     marginBottom: "10px",
                     borderRadius: "5px",
@@ -167,7 +158,18 @@ const Home = () => {
                   }}
                 >
                   <div className="election_image">
-                    <img src={election.imagePath} className="image" />
+                    <img
+                      src={`${api.defaults.baseURL.replace("/api", "")}${
+                        election.imagePath
+                      }`}
+                      className="image"
+                      alt={election.title}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
                   <div className="election_data">
                     <p

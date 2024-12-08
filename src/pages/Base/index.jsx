@@ -24,19 +24,53 @@ const Base = () => {
   };
 
   const renderContent = () => {
+    let pageTitle = ""; 
+  
+
     switch (activeTab) {
       case "parametros":
-        return <Parametros onSubmit={handleFormSubmit}  setActiveTab={setActiveTab}/>;
+        pageTitle = "Parâmetros";
+        return (
+          <>
+            <h2 className="titlePages">{pageTitle}</h2>
+            <Parametros onSubmit={handleFormSubmit} setActiveTab={setActiveTab} />
+          </>
+        );
       case "eleitores":
-        return <Eleitores setActiveTab={setActiveTab}/>;
+        pageTitle = "Eleitores";
+        return (
+          <>
+            <h2 className="titlePages">{pageTitle}</h2>
+            <Eleitores setActiveTab={setActiveTab} />
+          </>
+        );
       case "candidatos":
-        return <Candidatos setActiveTab={setActiveTab}/>;
+        pageTitle = "Candidatos";
+        return (
+          <>
+            <h2 className="titlePages">{pageTitle}</h2>
+            <Candidatos setActiveTab={setActiveTab} />
+          </>
+        );
       case "auditor":
-        return <Auditor setActiveTab={setActiveTab}/>;
+        pageTitle = "Auditor";
+        return (
+          <>
+            <h2 className="titlePages">{pageTitle}</h2>
+            <Auditor setActiveTab={setActiveTab} />
+          </>
+        );
       default:
-        return <Parametros onSubmit={handleFormSubmit} setActiveTab={setActiveTab}/>;
+        pageTitle = "Parâmetros";
+        return (
+          <>
+            <h1>{pageTitle}</h1>
+            <Parametros onSubmit={handleFormSubmit} setActiveTab={setActiveTab} />
+          </>
+        );
     }
   };
+  
 
   return (
     <Container>
@@ -81,26 +115,32 @@ const Base = () => {
             className={`tab ${activeTab === "parametros" ? "active" : ""}`}
             onClick={() => setActiveTab("parametros")}
           >
-            Parâmetros
+            1
           </div>
+          <div className="separator">........</div> 
           <div
             className={`tab ${activeTab === "eleitores" ? "active" : ""}`}
             onClick={() => setActiveTab("eleitores")}
           >
-            Eleitores
+            2
           </div>
+          <div className="separator">........</div> 
+
           <div
             className={`tab ${activeTab === "candidatos" ? "active" : ""}`}
             onClick={() => setActiveTab("candidatos")}
           >
-            Candidatos
+            3
           </div>
+          <div className="separator">........</div> 
+
           <div
             className={`tab ${activeTab === "auditor" ? "active" : ""}`}
             onClick={() => setActiveTab("auditor")}
           >
-            Auditor
+            4
           </div>
+
         </Tabs>
 
         {/* Renderiza o componente correspondente à guia ativa */}

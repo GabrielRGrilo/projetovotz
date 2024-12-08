@@ -1,37 +1,43 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { api } from "../services/api";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  // Função de login
   const login = async (credentials) => {
     try {
-      const response = await api.post("/login", credentials, { withCredentials: true });
-  
-      console.log("Login bem-sucedido useAuth.jsx:", response.data.user);
+      const response = await api.post("/login", credentials, {
+        withCredentials: true,
+      });
+
+      console.log(
+        "AUTH/USEAUTH.JS Login bem-sucedido useAuth.jsx:",
+        response.data.user
+      );
       sessionStorage.setItem("adminId", response.data.user._id);
       const user = sessionStorage.getItem("adminId");
       console.log("Login bem-sucedido user: ", user);
 
       return response.data.user; // Retorna os dados da resposta
     } catch (error) {
-      console.error("Erro ao logar:", error.response?.data?.message || error.message);
-      throw new Error(error.response?.data?.message || "Erro ao fazer login.");
+      console.error(
+        "Erro ao logar:",
+        error.response?.data?.message || error.message
+      );
+      throw error;
     }
   };
 
   const register = async (credentials) => {
     try {
       // Faz a requisição de registro para o backend
-      const response = await api.post(
-        "/administrator",
-        credentials,
-        { withCredentials: true }
-      );
+      const response = await api.post("/administrator", credentials, {
+        withCredentials: true,
+      });
 
       // Após o registro, salva o usuário retornado no estado
       setUser(response.data.user);
@@ -49,11 +55,9 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (formData) => {
     try {
       // Faz a requisição para o backend para atualizar o usuário
-      const response = await api.put(
-        "/perfil",
-        formData,
-        { withCredentials: true }
-      );
+      const response = await api.put("/perfil", formData, {
+        withCredentials: true,
+      });
 
       // Atualiza o estado do usuário com as novas informações
       setUser(response.data.user);
@@ -69,11 +73,7 @@ export const AuthProvider = ({ children }) => {
   // Função de logout
   const logout = async () => {
     try {
-      await api.post(
-        "/logout",
-        {},
-        { withCredentials: true }
-      );
+      await api.post("/logout", {}, { withCredentials: true });
       setUser(null);
       Cookies.remove("token");
     } catch (error) {
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // checkAuth();
+    checkAuth();
   }, []);
 
   return (

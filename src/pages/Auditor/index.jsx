@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {api} from '../../services/api';
+import React, { useState, useEffect, navigate } from "react";
+import { api } from "../../services/api";
 import {
   Container,
   Form,
@@ -16,120 +16,80 @@ import {
 } from "./styles";
 import { Button } from "../../components/Button";
 import { FaTrash, FaPen } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const Auditores = ({ setActiveTab }) => {
-    const electionId = sessionStorage.getItem("electionId");
+  const electionId = sessionStorage.getItem("electionId");
   const adminId = sessionStorage.getItem("adminId");
-    const [auditors, setAuditors] = useState([]);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [profile, setProfile] = useState("");
-    const [editingAuditorId, setEditingAuditorId] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [auditors, setAuditors] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState("");
+  const [editingAuditorId, setEditingAuditorId] = useState(null);
 
-    // Fetch auditors whenever the component is mounted
-    useEffect(() => {
-        if (electionId) fetchAuditors();
-    }, [electionId]);
+  // Fetch auditors whenever the component is mounted
+  useEffect(() => {
+    if (electionId) fetchAuditors();
+  }, [electionId]);
 
-    const fetchAuditors = async () => {
-        try {
-            const response = await api.get(`/auditors?electionId=${electionId}`);
-            setAuditors(Array.isArray(response.data) ? response.data : []);
-        } catch (error) {
-            console.error("Erro ao buscar auditores:", error);
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const auditorData = { electionId, name, email, profile };
-        try {
-            if (editingAuditorId) {
-                // Update existing auditor
-                await api.put(`/auditors/${editingAuditorId}`, auditorData);
-            } else {
-                // Add new auditor
-                await api.post("/auditors", auditorData);
-            }
-            fetchAuditors();
-            resetForm();
-        } catch (error) {
-            console.error("Erro ao salvar auditor:", error);
-        }
-    };
-
-    const handleEdit = (auditor) => {
-        setEditingAuditorId(auditor._id);
-        setName(auditor.name);
-        setEmail(auditor.email);
-        setProfile(auditor.profile);
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            await api.delete(`/auditors/${id}`);
-            fetchAuditors();
-        } catch (error) {
-            console.error("Erro ao excluir auditor:", error);
-        }
-    };
-
-    const resetForm = () => {
-        setName("");
-        setEmail("");
-        setProfile("");
-        setEditingAuditorId(null);
-    };
-
-  const handlePublishVoting = async () => {
-    const formData = new FormData();
-    formData.append("electionId", electionId);
-    formData.append("adminId", adminId);
-    if (!electionId) {
-      alert("Por favor, selecione uma eleição para publicar.");
-      return;
-    }
-
+  const fetchAuditors = async () => {
     try {
-      await api.put(`/elections/publish/${electionId}`);
-      setIsModalOpen(true);
-      await api.post(`/voting`, formData);
+      const response = await api.get(`/auditors?electionId=${electionId}`);
+      setAuditors(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error("Erro ao publicar a eleição:", error);
-      alert(
-        "Erro ao publicar a eleição: " +
-          (error.response?.data?.message || error.message)
-      );
+      console.error("Erro ao buscar auditores:", error);
     }
   };
 
-    const Modal = ({ message, onClose }) => (
-        <Overlay>
-            <ModalContent>
-                <CloseButton onClick={onClose}>&times;</CloseButton>
-                <h2>{message}</h2>
-            </ModalContent>
-        </Overlay>
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    Modal.propTypes = {
-        message: PropTypes.string.isRequired,
-        onClose: PropTypes.func.isRequired,
+    const auditorData = { electionId, name, email, profile };
+    try {
+      if (editingAuditorId) {
+        // Update existing auditor
+        await api.put(`/auditors/${editingAuditorId}`, auditorData);
+      } else {
+        // Add new auditor
+        await api.post("/auditors", auditorData);
+      }
+      fetchAuditors();
+      resetForm();
+    } catch (error) {
+      console.error("Erro ao salvar auditor:", error);
+    }
+  };
+
+  const handleEdit = (auditor) => {
+    setEditingAuditorId(auditor._id);
+    setName(auditor.name);
+    setEmail(auditor.email);
+    setProfile(auditor.profile);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/auditors/${id}`);
+      fetchAuditors();
+    } catch (error) {
+      console.error("Erro ao excluir auditor:", error);
+    }
+  };
+
+    const handleFinalizar = () => {
+        navigation.navigate('Home');
     };
+
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+    setProfile("");
+    setEditingAuditorId(null);
+  };
 
   return (
     <>
-      {isModalOpen && (
-        <Modal
-          message="Votação criada com sucesso!"
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-
       <Container>
         <Form onSubmit={handleSubmit}>
           <Row>
@@ -216,20 +176,19 @@ const Auditores = ({ setActiveTab }) => {
         <Row>
           <ButtonRow>
             <div></div>
-            <Button
+            {/* <Button
               title="Voltar"
               type="button"
               className="button"
               onClick={() => {
                 setActiveTab("candidatos");
               }}
-            />
+            /> */}
             <Button
               title="Finalizar"
               type="button"
               className="button"
-              onClick={handlePublishVoting}
-            />
+              onClick={handleFinalizar}            />
           </ButtonRow>
         </Row>
       </Container>
@@ -238,7 +197,7 @@ const Auditores = ({ setActiveTab }) => {
 };
 
 Auditores.propTypes = {
-    setActiveTab: PropTypes.func.isRequired,
-  };
-  
+  setActiveTab: PropTypes.func,
+};
+
 export default Auditores;

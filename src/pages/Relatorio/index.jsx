@@ -12,11 +12,13 @@ import {
   DropdownMenu // Certifique-se de que este styled component está definido
 } from './styles'
 
-import logo from '../../assets/logomarca.png';
-import {api} from '../../services/api';
+import logo from '../../assets/logomarca.png'
+import imgvotz from '../../assets/voltzimg.png'
+import { api } from '../../services/api'
 
 export function Relatorio() {
-  const adminId = sessionStorage.getItem('adminId') // Pegamos o adminId da URL
+  // const adminId = '6720133c76db6086dc694e08'
+  const adminId = sessionStorage.getItem('adminId')
   const [elections, setElections] = useState([])
   const [searchTerm, setSearchTerm] = useState('') // Estado para o texto de pesquisa
   const [statusFilter, setStatusFilter] = useState('') // Estado para o filtro de status
@@ -25,10 +27,8 @@ export function Relatorio() {
   // Função para buscar as eleições do backend
   const fetchElections = async () => {
     try {
-      const response = await api.get(
-        `/elections/admin/${adminId}`
-      );
-      setElections(response.data); // Salvamos as eleições na variável de estado
+      const response = await api.get(`/elections/admin/${adminId}`)
+      setElections(response.data) // Salvamos as eleições na variável de estado
     } catch (error) {
       console.error('Erro ao buscar eleições:', error)
     }
@@ -42,10 +42,10 @@ export function Relatorio() {
   }, [adminId])
 
   // Função para abrir o PDF do relatório
-  const openReport = (electionId) => {
-    const reportUrl = `/reports/${electionId}/export`;
-    window.open(reportUrl, '_blank'); // Abre o PDF em uma nova aba
-  };
+  const openReport = electionId => {
+    const reportUrl = `https://pmv-ads-2023-2-e4-proj-dad-t2-votz.onrender.com/api/reports/${electionId}/export`
+    window.open(reportUrl, '_blank') // Abre o PDF em uma nova aba
+  }
 
   // Função para filtrar as eleições com base no termo de pesquisa e status
   const filteredElections = elections.filter(election => {
@@ -73,12 +73,22 @@ export function Relatorio() {
       <Sidebar />
       <Content>
         <Header>
-          <div className="header-container">
-            <div className="logo-container">
-              <img src={logo} alt="Votz logo" className="logo" />
-              <p>Vote online com segurança.</p>
+          
+            <div className="header">
+              <div className='bloco1'>
+                <img src={logo} alt="Votz logo" className="logo" />
+                <p className="text">Vote online com segurança.</p>
+              </div>
+
+              <div  className="header-image">
+                <img
+                  src={imgvotz}
+                  alt="Vote illustration"
+                 
+                />
+              </div>
             </div>
-          </div>
+          
         </Header>
 
         <TitleSection>

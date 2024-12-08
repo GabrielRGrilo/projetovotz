@@ -37,7 +37,7 @@ export default {
 
     CARROT_100: "#FBA94C",
     MINT: "#04D361",
-    BABY_BLUE: "#89cff0",
+    BABY_BLUE: "#e2ecf6",
 
     CAKE_100: "#065E7C",
     CAKE_200: "#82F3FF",

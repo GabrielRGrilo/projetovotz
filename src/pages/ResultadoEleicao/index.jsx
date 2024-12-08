@@ -1,95 +1,116 @@
-import React, { useState, useEffect} from 'react';
-import { Container, Content, ContentHeader, MainResults} from "./styles";
-import { Header } from "../../components/Header";	
-import Sidebar from '../../components/Sidebar';
-import logo from "../../assets/logomarca.png";
-import { useParams } from "react-router-dom";
-import { Button } from '../../components/Button';
-import { api } from '../../services/api';
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { api } from '../../services/api'
+import { Container, Content, MainResults } from './styles'
 
+export function Resultado() {
+  const { id } = useParams()
+  const [election, setElection] = useState({
+    title: '',
+    candidates: [],
+    status: ''
+  })
+  const [totalVotes, setTotalVotes] = useState(0)
 
-
-
-
-export function Resultado ()  {
-  const { id } = useParams(); // Pegamos o ID da eleição pela URL
-  const [election, setElection] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchResults = async () => {
-    try {
-      const response = await api.get(`/elections/${id}`);
-      setElection(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
- 
   useEffect(() => {
-    fetchResults();
-  }, [id]);
+    const fetchElectionResults = async () => {
+      console.log('OPAAAAAAA')
+      try {
+        // Busca os detalhes da eleição
+        const responseElection = await api.get(`/elections/${id}`)
+        const responseCandidates = await api.get(`/candidates/elections/${id}`)
+        const responseVotings = await api.get(`/votings/elections/${id}`)
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+        const fetchedElection = responseElection.data
+        const fetchedCandidates = responseCandidates.data
 
-  // Calcula a porcentagem de votos para cada candidato
-  const totalVotes = election.candidates.reduce((total, candidate) => total + candidate.votes, 0);
+        console.log('feaefawef', fetchedCandidates)
+        console.log('responseVotings', responseVotings)
 
-  const winner = election.candidates.reduce((prev, current) => 
-    prev.votes > current.votes ? prev : current
-  );
+        const candidates = fetchedCandidates
+        candidates.forEach(cand => {
+          cand.votes =
+            responseVotings?.data?.[0]?.candidates?.find(
+              c => c.candidateId === cand._id
+            )?.votes || 0
+        })
 
+        console.log(candidates)
 
+        setElection({
+          title: fetchedElection.title,
+          candidates: fetchedCandidates,
+          status: fetchedElection.status
+        })
 
-    return (
-        <Container>
-            <Sidebar />
+        const total = fetchedCandidates.reduce(
+          (sum, candidate) => sum + candidate.votes,
+          0
+        )
+        setTotalVotes(total)
+      } catch (error) {
+        console.error('Erro ao buscar os resultados da eleição:', error)
+      }
+    }
 
-            <Content>
-            <Header logo={logo}/>
-            <ContentHeader>
-                <h2>Resultado da Eleição: {election.title}</h2>
-                <p>Encerramento da votação: {new Date(election.endDate).toLocaleString()}</p>
-                <div className='status'>{election.status}</div>
-                
-            </ContentHeader> 
-            <MainResults>
-            <div className='mainResultsHeader'>
-              <div><p>CANDIDATOS</p></div>
-              <div className='totalVotes'>  <p>{totalVotes} votos totais</p></div>
-            
-        </div>
-            <div>
-            
+    fetchElectionResults()
+  }, [id])
 
+  const sortedCandidates = [...election.candidates].sort(
+    (a, b) => b.votes - a.votes
+  )
 
-      <div>
-        {election.candidates.map((candidate) => {
-          const percentage = ((candidate.votes / totalVotes) * 100).toFixed(2);
-          return (
-            <div className='candidatesVotes' key={candidate._id}>
-              <div className='candidates'>
-              
-              {candidate.name = "João da Silva" ? "João da Silva" : "Maria da Silva"} 
+  return (
+    <Container>
+      <Content>
+        <MainResults>
+          <div className="resultsHeader">
+            <span className="columnHeader">Candidatos</span>
+            <span className="columnHeader">
+              {election.status === 'Encerrada'
+                ? `Total de votos: ${totalVotes} votos`
+                : 'Total de Votos: Aguarde Finalização'}
+            </span>
+          </div>
+          <div className="candidatesList">
+            {sortedCandidates.map((candidate, index) => {
+              const percentage =
+                totalVotes > 0
+                  ? ((candidate.votes / totalVotes) * 100).toFixed(2)
+                  : 0
+              return (
+                <div className="candidateItem" key={candidate._id}>
+                  <span className="name">
+                    {candidate.name}
+                    {index === 0 && election.status === 'Encerrada' && (
+                      <span style={{ color: '#57708c', marginLeft: '8px' }}>
+                        (vencedor)
+                      </span>
+                    )}
+                  </span>
+                  <div className="progressBarContainer">
+                    <div
+                      className="progressBar"
+                      style={{
+                        width: `${percentage}%`,
+                        backgroundColor:
+                          election.status === 'Encerrada'
+                            ? '#007BFF'
+                            : '#6C757D'
+                      }}
+                    />
+                  </div>
+                  <span className="votes">
+                    {election.status === 'Encerrada'
+                      ? `${candidate.votes} votos (${percentage}%)`
+                      : 'Aguarde'}
+                  </span>
                 </div>
-                <div className='votes'>
-                {candidate.votes = "300"} votos ({percentage}%)
-                </div>
-            </div>
-            
-          );
-        })}
-      </div>
-    </div>
-          <button >Relatórios</button>  
-            </MainResults>
-                
-            </Content>
-        </Container>
-    );
+              )
+            })}
+          </div>
+        </MainResults>
+      </Content>
+    </Container>
+  )
 }
-
-

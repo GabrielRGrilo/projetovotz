@@ -70,28 +70,35 @@ export const Content = styled.div`
     width: 50% !important;
   }
 
-  .newelection {
-    position: relative;
-    align-items: end;
-  }
+.newelection {
+  position: relative;
+  display: flex; 
+  justify-content: flex-end; 
+  align-items: center; 
+}
 
-  .newelection-box {
-    display: flex;
-    float: right;
-    align-items: center;
-    text-align: center;
-    width: 50%;
-    height: 70%;
-    background-color: ${({ theme }) => theme.COLORS.BABY_BLUE};
-    border-radius: 8px;
-    margin-top: 1.5vw;
-    cursor: pointer;
-  }
+.newelection-box {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  text-align: center;
+  width: 50%;
+  height: 60%;
+  background-color: ${({ theme }) => theme.COLORS.BABY_BLUE};
+  border-radius: 8px;
+  // margin-top: 1.5vw;
+  cursor: pointer;
+  overflow: hidden;
+}
 
-  .newelection-text {
-    font-size: 3rem;
-    font-weight: bold;
-  }
+.newelection-text {
+  font-size: calc(1vw + 0.5rem);
+  font-weight: bold;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.2;
+  word-wrap: break-word;
+}
 
   .newelection-image {
     height: auto;

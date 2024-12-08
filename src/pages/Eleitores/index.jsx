@@ -2,7 +2,7 @@ import { Container, Form, Row } from "./styles";
 import { Button } from "../../components/Button";
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import {api} from '../../services/api';
+import { api } from "../../services/api";
 
 const Eleitor = ({ setActiveTab }) => {
   const [voters, setVoters] = useState([]);
@@ -11,23 +11,22 @@ const Eleitor = ({ setActiveTab }) => {
   const [error, setError] = useState(null);
   const electionId = sessionStorage.getItem("electionId");
 
-  const modelFileUrl = "http://localhost:3000/public/model/voters_model.csv";
+  const modelFileUrl =
+    api.defaults.baseURL.replace("/api", "") + "/public/model/voters_model.csv";
 
-  useEffect(() => {
-    if (voters.length === 0) {
-      fetchVoters();
-    }
-  }, [voters]);
+  // useEffect(() => {
+  //   if (voters.length === 0) {
+  //     fetchVoters();
+  //   }
+  // }, [voters]);
 
   const fetchVoters = async () => {
     try {
-      const response = await api.get(
-        `/voter?electionId=${electionId}`
-      );
+      const response = await api.get(`/voter?electionId=${electionId}`);
       setVoters(Array.isArray(response.data) ? response.data : []);
       // console.log(">>> Eleitores/index.js voters", voters);
     } catch (error) {
-      console.error("Erro ao buscar candidatos:", error);
+      console.error("Erro ao buscar eleitores:", error);
     }
   };
 
@@ -42,6 +41,7 @@ const Eleitor = ({ setActiveTab }) => {
 
     try {
       const result = await uploadFile(file);
+      console.log(">>> Eleitores/index.js handleDataUpload result", result);
       if (result) {
         setValid(result.validRows);
         setInvalid(result.invalidRows);
@@ -60,20 +60,22 @@ const Eleitor = ({ setActiveTab }) => {
 
   // Upload the file to the server
   const uploadFile = async (file) => {
-    console.log(">>> Eleitores/index.js uploadFile file", file);
     const formData = new FormData();
     formData.append("file", file);
+    // console.log(">>> Eleitores/index.js file", file);
+    try {
+      const response = await api.post("/voters/file", formData);
+      console.log(">>> Eleitores/index.js uploadFile response", response);
 
-    const response = await fetch("/voters/file", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
+      if (response.status === 200 && response.data) {
+        return response.data; // Return parsed data directly
+      } else {
+        throw new Error("Unexpected response from the server.");
+      }
+    } catch (error) {
+      console.error("Upload failed:", error.message || error.response);
       throw new Error("Failed to upload the file");
     }
-
-    return response.json();
   };
 
   const handleSubmit = async (e) => {
@@ -84,10 +86,15 @@ const Eleitor = ({ setActiveTab }) => {
       electionId,
     }));
 
-    await api.post(
-      "/voters",
-      validRowsWithElectionId
-    );
+    console.log(validRowsWithElectionId);
+
+    try {
+      const response = await api.post("/voters", validRowsWithElectionId);
+      console.log(response.data);
+    } catch (err) {
+      console.error("Erro ao enviar os dados:", err);
+      setError("Erro ao enviar os dados.");
+    }
 
     setActiveTab("candidatos");
   };
@@ -162,7 +169,7 @@ const Eleitor = ({ setActiveTab }) => {
 
 Eleitor.propTypes = {
   onSubmit: PropTypes.func,
-  setActiveTab: PropTypes.func.isRequired,
+  setActiveTab: PropTypes.func,
 };
 
 export default Eleitor;

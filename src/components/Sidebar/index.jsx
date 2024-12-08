@@ -34,10 +34,10 @@ const goToRelatorio = () => {
         <Link 
           to="/home" 
           className="menu-icon" 
-          onMouseEnter={() => handleMouseEnter('Votações')}
+          onMouseEnter={() => handleMouseEnter('Eleições')}
           onMouseLeave={handleMouseLeave}
         >
-          {hovered === 'Votações' ? 'Votações' : <FaList />}
+          {hovered === 'Eleições' ? 'Eleições' : <FaList />}
         </Link>
         <Link 
           to="/relatorio" 

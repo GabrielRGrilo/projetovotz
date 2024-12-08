@@ -269,14 +269,14 @@ const enviarDadosParaBackend = async (formData) => {
                     </Row>
                     <Row>
                         <CheckboxGroup>
-                            <label>
+                            {/* <label>
                                 <input
                                     type="checkbox"
                                     checked={allowBlankVote}
                                     onChange={handleAllowBlankVoteChange}
                                 />
                                 voto branco/nulo
-                            </label>
+                            </label> */}
                         </CheckboxGroup>
                     </Row>
                     <Row>
@@ -291,7 +291,7 @@ const enviarDadosParaBackend = async (formData) => {
 
     Parametro.propTypes = {
         onSubmit: PropTypes.func,
-        setActiveTab: PropTypes.func.isRequired,
+        setActiveTab: PropTypes.func,
     };
 
     export default Parametro;

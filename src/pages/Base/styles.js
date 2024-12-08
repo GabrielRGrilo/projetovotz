@@ -46,8 +46,7 @@ export const Content = styled.div`
     width: 80vw;
     padding: 0.5rem;
     height: 70%;  
-    box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.3);
-    border-radius: 1vh;
+    background-color: #f9f9f9;
   }
 
   h2 {
@@ -55,6 +54,10 @@ export const Content = styled.div`
     margin: 0;
   }
 
+  .titlePages {
+    padding-top: 5rem;
+    padding-left: 2rem;
+  }
   .line {
   width: 90%;
   margin-bottom: 3rem;
@@ -86,20 +89,40 @@ export const Tabs = styled.div`
   margin-bottom: 2vh;
   width: 80vw;
   
+
   .tab {
-    flex-grow: 1;
-    padding: 1.5vh;
-    border: 0.1rem solid black;
-    background-color: ${({ theme }) => theme.COLORS.LIGHT_100};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0.1rem solid ${({ theme }) => theme.COLORS.LIGHT_300};
+    background-color:  ${({ theme }) => theme.COLORS.LIGHT_300};
     color: ${({ theme }) => theme.COLORS.LIGHT_DARK_300};
     text-align: center;
     cursor: pointer;
-    border-radius: 0;
     font-weight: normal;
+    font-size: 2rem;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
   }
 
-  .active {
-    font-weight: bold;
-    font-size: 2.5rem;
+  .separator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    color: ${({ theme }) => theme.COLORS.LIGHT_300};
+    width: auto;
   }
+
+   .active {
+    background-color: ${({ theme }) => theme.COLORS.DARK_100};
+    color: ${({ theme }) => theme.COLORS.LIGHT_100};
+    font-weight: bold;
+    border: 0.1rem solid ${({ theme }) => theme.COLORS.DARK_100};
+  }
+
 `;

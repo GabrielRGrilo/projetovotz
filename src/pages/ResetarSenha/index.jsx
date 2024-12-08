@@ -59,6 +59,7 @@ export function ResetarSenha() {
                 <Form onSubmit={handleSubmit}>
                     <h1>Atualizar Senha</h1>
 
+                    <div className='inputBox'>    
                     <label htmlFor="newPassword">Nova Senha:</label>
                     <Input
                         id="newPassword"
@@ -78,7 +79,7 @@ export function ResetarSenha() {
                         value={confirmNewPassword}
                         onChange={handleInputChange}
                     />
-
+                    </div>
                     <Button title="Atualizar Senha" type="submit">Atualizar Senha</Button>
 
                     {message && <p>{message}</p>} {/* Exibe a mensagem de sucesso ou erro */}

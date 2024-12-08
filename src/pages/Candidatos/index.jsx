@@ -220,15 +220,30 @@ return (
         </table>
         <Row>
             <div></div>
-            <Button type="submit" title="Voltar" className="button" onClick={() => { setActiveTab("eleitores"); }} />
-            <Button type="submit" title="Próxima" className="button" onClick={() => { setActiveTab("auditor"); }} />
+            {/* <Button type="submit" title="Voltar" className="button" onClick={() => { setActiveTab("eleitores"); }} /> */}
+            {candidates.length < 2 && (
+                <p style={{ color: "red", marginTop: "10px" }}>
+                    É necessário cadastrar ao menos 2 candidatos para prosseguir.
+                </p>
+            )}
+            <Button
+                type="button"
+                title="Próxima"
+                className="button"
+                onClick={() => {
+                    if (candidates.length >= 2) {
+                        setActiveTab("auditor");
+                    }
+                }}
+                disabled={candidates.length < 2}
+            />
         </Row>
     </Container>
 );
 };
 
 Candidatos.propTypes = {
-    setActiveTab: PropTypes.func.isRequired,
+    setActiveTab: PropTypes.func,
 };
 
 

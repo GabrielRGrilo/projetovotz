@@ -1,81 +1,147 @@
 import { Container, Content } from "./styles";
 import logo from "../../assets/logomarca.png";
+import deleteIcon from "../../assets/delete.png";
+import editIcon from "../../assets/edit.png";
 import { Header } from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../Auth/useAuth";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Modal,
+  Button,
+  StyleSheet,
+  ScrollView,
+  Image,
+} from "react-native";
 import { useParams, useNavigate } from "react-router-dom";
-import {api} from '../../services/api';
-import { Button, Modal } from "react-bootstrap";
+import { api } from "../../services/api";
+import { Modal } from "react-bootstrap"; // Importando o modal do react-bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Resultado } from "../ResultadoEleicao";
+import CommonLayout from "@/components/CommonLayout"; // Importando o layout comum
+
+import deleteIcon from "../../assets/images/delete.png";
+import editIcon from "../../assets/images/edit.png";
 
 const DetailedElection = () => {
-  const { id } = useParams();
+  const electionId = sessionStorage.getItem("electionId");
+  const adminId = sessionStorage.getItem("adminId");
+
   const [election, setElection] = useState();
   const [candidates, setCandidates] = useState([]);
-  const [deleting, setDeleting] = useState(false);
-  const [show, setShow] = useState(false);
+  const [voters, setVoters] = useState([]);
+  const [auditors, setAuditors] = useState([]);
+  const [voting, setVoting] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(0);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState(false); // Estado para controle do modal de publicação
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const navigate = useNavigate();
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   useEffect(() => {
-    // Fetch election details by electionId
-    const fetchElection = async () => {
+    const fetchAllData = async () => {
+      const electionRes = await api.get(`/elections/${electionId}`);
+      console.log("EleicaoDetalhes/index.js electionRes: ", electionRes.data);
+      setElection(electionRes.data);
+
+      // if (electionRes.data === "Publicada") {
       try {
-        const response = await api.get(
-          `/elections/${id}`
+        const [voterRes, candidateRes, auditorRes, votingRes] =
+          await Promise.all([
+            api.get(`/voters/elections/${electionId}`),
+            api.get(`/candidates/elections/${electionId}`),
+            api.get(`/auditors/elections/${electionId}`),
+            api.get(`/votings/elections/${id}`),
+          ]);
+        setLoading(false);
+
+        const voters = voterRes.data || [];
+        // console.log("Votar/index.js voters: ", voters);
+        const candidates = candidateRes.data || [];
+        // console.log("Votar/index.js candidates: ", candidates);
+        const auditor = auditorRes.data || [];
+        // console.log("Votar/index.js auditorRes: ", auditorRes);
+        const voting = votingRes.data || [];
+        // console.log("Votar/index.js votingRes: ", votingRes);
+
+        setVoters(voters);
+        setCandidates(candidates);
+        setAuditors(auditor);
+        setVoting(voting);
+
+        candidates.forEach((cand) => {
+          cand.votes =
+            voting?.data?.[0]?.candidates?.find(
+              (c) => c.candidateId === cand._id
+            )?.votes || 0;
+        });
+
+        const total = candidates.reduce(
+          (sum, candidate) => sum + candidate.votes,
+          0
         );
-        setElection(response.data);
+        setTotalVotes(total);
       } catch (error) {
-        console.error("Error fetching election details:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchElection();
-  }, [id]);
+    // };
 
-  useEffect(() => {
-    // Fetch candidates by electionId
-    const fetchCandidates = async () => {
-      try {
-        const response = await api.get(
-          `/candidates/elections/${id}`
-        );
-        setCandidates(response.data);
-      } catch (error) {
-        console.error("Error fetching candidates for election:", error);
-      }
-    };
-    fetchCandidates();
-  }, [id]);
+    if (electionId) fetchAllData();
+  }, [electionId]);
 
-  // Function to handle deleting the election
+  // Handle Delete election
   const handleDelete = async () => {
-    setDeleting(true);
     try {
-      await api.delete(`/elections/${id}`);
-      alert("Election deleted successfully");
-      setDeleting(false);
-      setShow(false);
+      await api.delete(`/elections/${electionId}`);
+      alert("Eleição excluída com sucesso");
       navigate("/home");
     } catch (error) {
-      console.error("Error deleting election:", error);
-      setDeleting(false);
+      console.error("Erro ao excluir eleição:", error);
+      alert("Ocorreu um erro ao tentar excluir a eleição.");
+    } finally {
+      setShowDeleteModal(false);
     }
   };
 
-  // Function to handle editing the election
+  // Handle Publish election
+  const handlePublish = async () => {
+    const formData = new FormData();
+    formData.append("electionId", electionId);
+    formData.append("adminId", adminId);
+    formData.append("voters", voters);
+    formData.append("candidates", candidates);
+    formData.append("auditors", auditors);
+
+    setIsPublishing(true);
+    try {
+      await Promise.all([
+        api.put(`/elections/publish/${electionId}`),
+        api.post(`/votings`, formData),
+      ]);
+      alert("Eleição publicada com sucesso!");
+      setShowPublishModal(false); // Fecha o modal após publicar
+    } catch (error) {
+      console.error("Erro ao publicar eleição:", error);
+      alert("Erro ao publicar eleição.");
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
+  // Navigate to edit page
   const handleEdit = () => {
-    navigate(`/elections/edit/${id}`); // Navigate to edit page
+    navigate(`/elections/edit/${electionId}`);
   };
 
-  // Function to navigate to election results
+  // Navigate to results page
   const handleViewResults = () => {
-    navigate(`/elections/${id}/results`);
+    navigate(`/elections/${electionId}/results`);
   };
-
-  if (!election) return <p>Loading...</p>;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -90,34 +156,48 @@ const DetailedElection = () => {
       case "Vencida":
         return "#DC3545"; // Red
       default:
-        return "#000000"; // Black for other status
+        return "#000000"; // Black
     }
   };
+
+  if (!election) return <p>Loading...</p>;
 
   return (
     <Container>
       <Sidebar />
       <Content>
-        <div className="header-newelection">
-          <div className="header">
-            <Header logo={logo} />
-          </div>
-          <div className="newelection">
-            <img
-              className="newelection-image"
-              src="../src/assets/img-voltz.png"
-            />
-          </div>
+        <div className="header">
+          <Header logo={logo} />
         </div>
-        <div>
-          <h1>{election.title}</h1>
+
+        <div className="election-details">
+          <div className="election-header">
+            <h1 className="title-election">{election.title}</h1>
+            <div className="election-actions">
+              {/* <img
+                src={editIcon}
+                alt="Edit Election"
+                className="icon-action"
+                onClick={handleEdit}
+              /> */}
+              <img
+                src={deleteIcon}
+                alt="Delete Election"
+                className="icon-action"
+                onClick={() => setShowDeleteModal(true)}
+              />
+            </div>
+          </div>
+
           <img
-            src={election.imagePath || "default-election-image.jpg"}
+            src={`${api.defaults.baseURL.replace("/api", "")}${
+              election.imagePath
+            }`}
             alt={election.title}
             style={{ width: "300px", height: "200px", objectFit: "cover" }}
           />
           <p>
-            <strong>End Date:</strong>{" "}
+            <strong>Encerramento da Votação:</strong>{" "}
             {new Date(election.endDate).toLocaleDateString()}
           </p>
           <p>
@@ -126,94 +206,75 @@ const DetailedElection = () => {
               {election.status}
             </span>
           </p>
-
-          {/* Table with candidates */}
-          <h2>Candidates</h2>
-          <table
-            border="1"
-            cellPadding="10"
-            style={{ width: "100%", textAlign: "left" }}
-          >
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Votes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {candidates.map((candidate) => (
-                <tr key={candidate._id}>
-                  <td>
-                    <img
-                      src={candidate.photo || "default-candidate-image.jpg"}
-                      alt={candidate.name}
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  </td>
-                  <td>{candidate.name}</td>
-                  <td>{candidate.votes}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Buttons */}
-          <div style={{ marginTop: "20px" }}>
-            <button onClick={handleEdit} style={buttonStyle}>
-              Edit Election
-            </button>
-            <Button variant="danger" onClick={handleShow}>
-              Delete Election
-            </Button>
-            {/* <button
-              onClick={handleDelete}
-              style={buttonStyle}
-              className="delete"
-            >
-              Delete Election
-            </button> */}
-            <button onClick={handleViewResults} style={buttonStyle}>
-              View Results
-            </button>
-          </div>
         </div>
-        <Modal show={show} onHide={handleClose}>
+
+        <div className="publish-election">
+          <button
+            className="btn-publish"
+            onClick={() => setShowPublishModal(true)} // Abre o modal de publicação
+          >
+            Publicar Eleição
+          </button>
+        </div>
+
+        <h2 className="title-result">Resultado da Eleição</h2>
+
+        {/* Election Results */}
+        <Resultado />
+
+        {/* Modal de Publicação */}
+        <Modal
+          show={showPublishModal}
+          onHide={() => setShowPublishModal(false)}
+        >
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Deletion</Modal.Title>
+            <Modal.Title>Confirmar Publicação</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to delete this election? This action cannot be
-            undone.
+            Tem certeza que deseja publicar esta eleição? Esta ação não pode ser
+            desfeita.
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button variant="danger" onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Deleting..." : "Delete"}
-            </Button>
+            <button
+              onClick={() => setShowPublishModal(false)}
+              className="modal-btn cancel-btn"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handlePublish}
+              className="modal-btn publish-btn"
+              disabled={isPublishing}
+            >
+              {isPublishing ? "Publicando..." : "Publicar"}
+            </button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Modal de Exclusão */}
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmar Exclusão</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Tem certeza que deseja excluir esta eleição? Esta ação não pode ser
+            desfeita.
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              onClick={() => setShowDeleteModal(false)}
+              className="modal-btn cancel-btn"
+            >
+              Cancelar
+            </button>
+            <button onClick={handleDelete} className="modal-btn delete-btn">
+              Excluir
+            </button>
           </Modal.Footer>
         </Modal>
       </Content>
     </Container>
   );
-};
-
-// Button styling
-const buttonStyle = {
-  padding: "10px 20px",
-  margin: "10px",
-  backgroundColor: "#4CAF50",
-  color: "white",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  fontSize: "16px",
 };
 
 export default DetailedElection;

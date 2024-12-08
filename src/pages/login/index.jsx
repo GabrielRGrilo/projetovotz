@@ -5,35 +5,21 @@ import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 
-export function Login() {
+export function Login(){
     const { login, user } = useAuth();
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Cria a função de navegação
     const [credentials, setCredentials] = useState({ email: '', password: '' });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError(null);
         try {
-            const response = await login(credentials);
-            console.log("Login bem-sucedido index.jsx:", response);
-            // await login(credentials);
-            // console.log("Login bem-sucedido. Redirecionando para /home...");
-
-            // document.cookie = `token=${response.token}; path=/; secure`;
-            // console.log('Token set in cookies:', document.cookie);
-
-            console.log("Navigating to /home...");
-            navigate('/home'); // Redireciona diretamente após login bem-sucedido
-        } catch (err) {
-            console.error('Falha no login:', err);
-            setError('Falha ao fazer login. Verifique suas credenciais.');
-        } finally {
-            setLoading(false);
+            await login(credentials);
+            navigate('/home');
+            console.log('Usuário logado:', user);
+        } catch (error) {
+            console.error('Falha no login:', error);
         }
     };
 

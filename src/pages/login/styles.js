@@ -36,7 +36,7 @@ export const Form = styled.form`
         position: relative;
         right: 20rem;
         font-size: 1.6rem;
-        font-weight: 701;
+        font-weight: 700;
         color: black;
         text-align: center;
         margin-left: 0.8rem;

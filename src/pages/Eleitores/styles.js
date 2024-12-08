@@ -59,4 +59,16 @@ export const Row = styled.div`
     color: red; /* Cor do asterisco */
     margin-left: 0.2rem; /* Um pequeno espaço entre o rótulo e o asterisco */
   }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  table th, table td {
+    width: calc(100% / 4);
+    text-align: center;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    word-break: break-word;
+  }
 `;

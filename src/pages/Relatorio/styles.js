@@ -93,42 +93,34 @@ export const Header = styled.div`
   margin-bottom: 2vh;
   width: 80vw;
   padding-bottom: 20px;
-  border-bottom: 1px solid #d3d3d3; 
+  border-bottom: 1px solid #d3d3d3;
+
+  .header {
+    display: flex;
+  }
+
+  .bloco1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo{
+  width: 150px;
+    align-self: normal;
   
-  .header-container {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    position: relative; 
-
-
-.logo-container {
-    display: flex; 
-    flex-direction:column;
-    
+  
   }
 
-
-  .logo {
-    width: 8vw;
-    height: auto;
-    margin: 0;
+  .header-image{
+   width: 180px;
   }
 
-  p {
-    margin-top: 0.5vh;
-    padding-left: 1.5vw;
-    font-size: 2.2rem;
-    width: 80vw;
-  }
-
-  .img-voltz {
-    
-    
-    width: 150px; 
-    
-  }
-    
+.text{
+font-size: 20px;
+    font-weight: 600;
+}
+}
 `
 
 export const Tabs = styled.div`
@@ -179,8 +171,7 @@ export const TitleSection = styled.div`
   align-items: center;
   margin-top: 2rem;
   width: 80vw;
-  
-`;
+`
 
 export const SearchSection = styled.div`
   display: flex;
@@ -190,11 +181,11 @@ export const SearchSection = styled.div`
 
   .filter-icon {
     font-size: 2rem;
-    width: 24px;    
+    width: 24px;
     color: #909090;
     cursor: pointer;
   }
-`;
+`
 
 export const SearchInput = styled.input`
   padding: 0.8rem 1rem;
@@ -209,7 +200,7 @@ export const SearchInput = styled.input`
   &:focus {
     border-color: #606060;
   }
-`;
+`
 
 export const DropdownMenu = styled.div`
   position: absolute;
@@ -230,7 +221,7 @@ export const DropdownMenu = styled.div`
       background-color: #f2f2f2;
     }
   }
-`;
+`
 
 export const FilterOptions = styled.div`
   position: absolute;
@@ -254,15 +245,14 @@ export const FilterOptions = styled.div`
       background-color: #f2f2f2;
     }
   }
-`;
-
+`
 
 export const VotingList = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 400px;
+
   overflow-y: auto;
- 
+  margin-bottom: 40px;
   margin-top: 20px;
 
   margin-top: 20px;
