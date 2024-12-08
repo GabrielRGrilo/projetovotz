@@ -10,7 +10,6 @@ import { api } from "../../services/api";
 import { Modal } from "react-bootstrap"; // Importando o modal do react-bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Resultado } from "../ResultadoEleicao";
-import CommonLayout from "@/components/CommonLayout"; // Importando o layout comum
 
 const DetailedElection = () => {
   const electionId = sessionStorage.getItem("electionId");
