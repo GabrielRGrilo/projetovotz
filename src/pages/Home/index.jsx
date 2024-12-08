@@ -98,7 +98,7 @@ const Home = () => {
               <div className="newelection-text">Criar nova Eleição</div>
               <img
                 className="newelection-image"
-                src="../web/assets/img-voltz.png"
+                src="../src/assets/img-voltz.png"
               />
             </div>
           </div>
